@@ -4,4 +4,12 @@ Many x86 convertibles lack a functional tablet mode switch when running Linux. S
 
 This Go program reads those accelerometers and creates a virtual input device that emits SW_TABLET_MODE events. On GNOME, this event enables the screen rotation feature, enables the on-screen keyboard, and disables the keyboard and trackpad (all out-of-the-box, no extensions required). The tablet detection algorithm is based off of Yauhen Kharuzhy's yet-to-be-merged [merge request](https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/-/merge_requests/338) to iio-sensor-proxy. Unlike petitstrawberry's [minibook-support](https://github.com/petitstrawberry/minibook-support) daemon, this program does not attempt to suppress keyboard and trackpad events by wrapping them in virtual input devices. On Wayland, libinput automatically suppresses these inputs after receiving a SW_TABLET_MODE event.
 
-This program has been tested specifically on a [Piccolo Series81x N150](https://x-plus.store/products/n150-netbook) minibook, but it should work with any convertible equipped with dual accelerometers.
+This program has been tested specifically on a [Piccolo Series81x N150](https://x-plus.store/products/n150-netbook) minibook and a [Chuwi Minibook X N150](https://www.chuwi.com/product/items/chuwi-minibook-x-n150.html) (which needs an extra udev rules file - see below), but it should work with any convertible equipped with dual accelerometers.
+
+## Installation
+
+* Compile the binary (just run `make`)
+* Install the binary and service with `make install`.
+* Enable it with `systemctl enable tablet-mode-accel.service`
+* If you are on a Chuwi Minibook device, add the udev rules file in `chuwi-minibook/` to `/etc/udev/rules.d/`
+* Reboot!

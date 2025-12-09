@@ -1,0 +1,16 @@
+# The minibook hides two sensors behind the same ACPI device; this forces a
+# second one to be made so that they can both be compared, and also assigns
+# labels and matrices to them both.
+
+# The first accelerometer (display)
+SUBSYSTEM=="iio", KERNEL=="iio*", SUBSYSTEMS=="i2c", \
+  DEVPATH=="*/i2c-1/i2c-MDA6655:00/iio:device0", \
+  ENV{ACCEL_LOCATION}="display", \
+  ENV{ACCEL_MOUNT_MATRIX}="0,-1,0;1,0,0;0,0,1", \
+  RUN+="/bin/sh -c 'echo mxc4005 0x15 > /sys/bus/i2c/devices/i2c-0/new_device'"
+
+# For the second accelerometer (base)
+SUBSYSTEM=="iio", KERNEL=="iio*", SUBSYSTEMS=="i2c", \
+  DEVPATH=="*/i2c-0/0-0015/iio:device1", \
+  ENV{ACCEL_LOCATION}="base", \
+  ENV{ACCEL_MOUNT_MATRIX}="0,-1,0;1,0,0;0,0,1"
