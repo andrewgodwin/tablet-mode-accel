@@ -10,6 +10,6 @@ This program has been tested specifically on a [Piccolo Series81x N150](https://
 
 * Compile the binary (just run `make`)
 * Install the binary and service with `make install`.
+  * If you are on a Chuwi Minibook device, use `make install-chuwi` instead
 * Enable it with `systemctl enable tablet-mode-accel.service`
-* If you are on a Chuwi Minibook device, add the udev rules file in `chuwi-minibook/` to `/etc/udev/rules.d/`
 * Reboot!

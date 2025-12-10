@@ -30,9 +30,14 @@ const (
 	tablet
 )
 
+var chuwiMode bool = false
+
 func main() {
 	debug := flag.Bool("debug", false, "show accelerometer values and calculations")
+	chuwi := flag.Bool("chuwi", false, "flip angles for some Chuwi devices")
 	flag.Parse()
+
+	chuwiMode = *chuwi
 
 	if *debug {
 		runDebug()
@@ -208,13 +213,24 @@ func hingeAngle(disp, base accelerometer, lidClosed bool) float64 {
 	if angle > 180 {
 		angle -= 360
 	}
-	angle += 180
+	if chuwiMode {
+		angle = 0 - angle
+		if angle < 0 {
+			angle += 360
+		}
+	} else {
+		angle += 180
+	}
 	// Handle the corner case: tablet is closed or bended by 360 deg.
 	// The calculated hinge angle may be wrapped around 0/360 deg.
 	// Here, check the lid state and normalize
 	if lidClosed {
 		angle = 0
 	} else if angle < 5 {
+		angle = 360
+	// Add a greater margin of error for Chuwi devices
+	// TODO: More refinement based on direction of spin seen?
+	} else if (angle < 10) && chuwiMode {
 		angle = 360
 	}
 	return angle
